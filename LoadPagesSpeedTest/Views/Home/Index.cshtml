@@ -1,0 +1,80 @@
+﻿@model LoadPagesSpeedTest.Models.TestViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="div_main">
+    <div>
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { id = "urlsFrom" }))
+        {
+            <div class="form-group form-group-sm">
+                <br />
+                <div class="col-sm-11">
+                    <input class="form-control" type="text" id="MainUrl" name="MainUrl" placeholder="Enter URL here" value="@Model.Test.MainUrl">
+                </div>
+                <input type="hidden" id="UserConnectionId" name="UserConnectionId" />
+                <div class=" col-sm-1">
+                    <input type="submit" class="btn btn-primary" value="Start" />
+                </div>
+            </div>
+        }
+    </div>
+    <div class="div_top div_bordered">
+        <div>
+            <canvas id="chartContainer" style="width: 100%; height: 600px;"></canvas>
+        </div>
+    </div>
+    <input type="hidden" id="lables" value="@ViewBag.Labels" />
+    <input type="hidden" id="datapoints" value="@ViewBag.DataPoints" />
+    <div class="div_bottom div_bordered">
+        <table class="table table-striped data_table" id="res_tbl">
+            <thead>
+                <tr>
+                    <td>Url</td>
+                    <td>MinTime, ms</td>
+                    <td>MaxTime, ms</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.TestDetails)
+                {
+                    <tr>
+                        <td>@item.Url</td>
+                        <td>@item.ResponseMinTime</td>
+                        <td>@item.ResponseMaxTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
+        $(function () {
+            
+            var infohub = $.connection.viewHub;
+            infohub.client.addItemResult = function (tres) {
+                var tr = "<tr><td>" + tres.Url + "</td><td>" + tres.ResponseMinTime + "</td><td>" + tres.ResponseMaxTime + "</td></tr>";
+                $('#res_tbl').find('tbody').append(tr);
+            };
+            infohub.client.registerId = function (id) {
+                $('#UserConnectionId').val(id);
+            }
+            $.connection.hub.start();
+            infohub.client.onConnected = function (id) {
+
+                $('#UserConnectionId').val(id);
+            }
+
+            $('#urlsFrom').submit(function (e) {
+                $('#chartContainer').hide();
+                $("#res_tbl > tbody").empty();
+            });
+        });
+    </script>
+    <script src="~/Scripts/chartHelper.js"></script>
+}

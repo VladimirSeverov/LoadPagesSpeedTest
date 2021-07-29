@@ -1,0 +1,17 @@
+﻿@model LoadPagesSpeedTest.Models.Test
+@{
+    ViewData["Title"] = "Delete Test's Result";
+}
+
+<h1>Delete Test's Result</h1>
+
+<h3>@("Are you sure you want to delete «" + Model.MainUrl + "» (" + Model.TestDate.ToString("dd.MM.yyyy HH:mm:ss")+") ?")</h3>
+<div>
+    @using (Html.BeginForm("DeleteConfirmed", "History", FormMethod.Post))
+    {
+        <input type="hidden" name="TestId" id="TestId" value="@Model.TestId"/>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <br />
+        @Html.ActionLink("Back to List", "Index")
+    }
+</div>

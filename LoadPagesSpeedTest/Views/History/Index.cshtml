@@ -1,0 +1,40 @@
+﻿@model IEnumerable<LoadPagesSpeedTest.Models.Test>
+@{
+    ViewBag.Title = "History";
+}
+
+<h2>History</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                MainUrl
+            </th>
+            <th>
+                DateTest
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MainUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TestDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.TestId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.TestId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

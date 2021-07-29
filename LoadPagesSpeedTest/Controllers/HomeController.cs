@@ -1,4 +1,5 @@
-﻿using LoadPagesSpeedTest.Hubs;
+﻿using LoadPagesSpeedTest.Helpers;
+using LoadPagesSpeedTest.Hubs;
 using LoadPagesSpeedTest.Models;
 using LoadPagesSpeedTest.Repository;
 using Newtonsoft.Json;
@@ -14,12 +15,14 @@ namespace LoadPagesSpeedTest.Controllers
     {
         private readonly IRepository<Test> tests;
         private readonly IRepository<TestDetails> testDetails;
+        private readonly ISiteHelper siteHelper;
         private string UserConnectionId { get; set; }
 
-        public HomeController(IRepository<Test> tests, IRepository<TestDetails> testDetails)
+        public HomeController(IRepository<Test> tests, IRepository<TestDetails> testDetails, ISiteHelper siteHelper)
         {
             this.tests = tests;
             this.testDetails = testDetails;
+            this.siteHelper = siteHelper;
         }
 
         [HttpGet]
@@ -54,15 +57,15 @@ namespace LoadPagesSpeedTest.Controllers
         private async Task StartTestSite(TestViewModel twm)
         {
 
-            SiteWorker sw = new SiteWorker();
+            
 
-            List<string> siteMapUrls = sw.GetSiteMap(twm.Test.MainUrl);
+            List<string> siteMapUrls = siteHelper.GetSiteMap(twm.Test.MainUrl);
             twm.Test.TestDate = DateTime.Now;
             twm.Test.TestId = await tests.Add(twm.Test);
 
             for (int i = 0; i < siteMapUrls.Count; i++)
             {
-                var res = await sw.GetResultBySitemapItem(siteMapUrls[i], twm.Test.TestId);
+                var res = await siteHelper.GetResultBySitemapItem(siteMapUrls[i], twm.Test.TestId);
                 await testDetails.Add(res);
                 twm.TestDetails.Add(res);
                 SendItemResToView(res);

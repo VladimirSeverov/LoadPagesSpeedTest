@@ -14,8 +14,8 @@ namespace LoadPagesSpeedTest.Repository
 
         public BaseEFRepository(AppDBContext context)
         {
-            this.db = context;
-            this.dbSet = context.Set<TEntity>();
+            db = context;
+            dbSet = context.Set<TEntity>();
         }
 
         public virtual async Task<int> Add(TEntity entity)

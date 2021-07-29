@@ -1,6 +1,7 @@
 ﻿using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
+using LoadPagesSpeedTest.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,10 +9,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-
-namespace LoadPagesSpeedTest.Models
+namespace LoadPagesSpeedTest.Helpers
 {
-    public class SiteWorker
+    public class SiteHelper : ISiteHelper
     {
         public List<string> GetSiteMap(string mainUrl)
         {
@@ -19,7 +19,7 @@ namespace LoadPagesSpeedTest.Models
 
             string html = DownloadString(mainUrl);
             List<string> res = new List<string>();
-            
+
             IHtmlDocument angle = new HtmlParser().ParseDocument(html);
             string href = "";
             foreach (IElement element in angle.QuerySelectorAll("a"))
@@ -37,22 +37,22 @@ namespace LoadPagesSpeedTest.Models
                     res.Add(href);
                 }
             }
-                
+
             return res;
         }
 
-        private string DownloadString(string url)
+        public string DownloadString(string url)
         {
             HttpClient httpClient = new HttpClient();
             return httpClient.GetStringAsync(url).Result;
         }
-        private byte[] DownloadBytes(string url)
+        public byte[] DownloadBytes(string url)
         {
             HttpClient httpClient = new HttpClient();
             return httpClient.GetByteArrayAsync(url).Result;
         }
 
-        private int GetDownloadSpeed(string url)
+        public int GetDownloadSpeed(string url)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -61,7 +61,7 @@ namespace LoadPagesSpeedTest.Models
             return stopWatch.Elapsed.Milliseconds;
         }
 
-        private async Task<List<int>> GetTestResult(string url)
+        public async Task<List<int>> GetTestResult(string url)
         {
             List<int> res = new List<int>();
             for (int i = 0; i < 3; i++)
@@ -76,7 +76,7 @@ namespace LoadPagesSpeedTest.Models
         {
             var res = await GetTestResult(url);
 
-            return new TestDetails() { Url = url, ResponseMinTime = res.Min(), ResponseMaxTime = res.Max(), ResponseAvgTime = Convert.ToInt32(res.Average()), TestId=id };
+            return new TestDetails() { Url = url, ResponseMinTime = res.Min(), ResponseMaxTime = res.Max(), ResponseAvgTime = Convert.ToInt32(res.Average()), TestId = id };
         }
     }
 }

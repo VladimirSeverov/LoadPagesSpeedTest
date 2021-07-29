@@ -1,4 +1,5 @@
-﻿using LoadPagesSpeedTest.Models;
+﻿using LoadPagesSpeedTest.Helpers;
+using LoadPagesSpeedTest.Models;
 using LoadPagesSpeedTest.Repository;
 using Ninject;
 using System;
@@ -31,6 +32,7 @@ namespace LoadPagesSpeedTest.Infrastructure
         {
             kernel.Bind<IRepository<Test>>().To<TestRepository>();
             kernel.Bind<IRepository<TestDetails>>().To<TestDetailsRepository>();
+            kernel.Bind<ISiteHelper>().To<SiteHelper>();
         }
     }
 }

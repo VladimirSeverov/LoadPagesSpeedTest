@@ -227,10 +227,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ISiteHelper.cs" />
+    <Compile Include="Helpers\SiteHelper.cs" />
     <Compile Include="Hubs\ViewHub.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\Startup.cs" />
-    <Compile Include="Models\SiteWorker.cs" />
     <Compile Include="Models\Test.cs" />
     <Compile Include="Models\TestDetails.cs" />
     <Compile Include="Models\TestViewModel.cs" />

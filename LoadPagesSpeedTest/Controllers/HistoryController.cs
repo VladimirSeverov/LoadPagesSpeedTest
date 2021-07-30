@@ -34,8 +34,8 @@ namespace LoadPagesSpeedTest.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.Labels = JsonConvert.SerializeObject(tw.TestDetails.Select(x => x.Url).ToArray());
-            ViewBag.DataPoints = JsonConvert.SerializeObject(tw.TestDetails.Select(x => x.ResponseMaxTime).ToArray());
+            ViewBag.Labels = JsonConvert.SerializeObject(tw.TestDetails.Where(z => z.ResponseMinTime > -1).Select(x => x.Url).ToArray());
+            ViewBag.DataPoints = JsonConvert.SerializeObject(tw.TestDetails.Where(z => z.ResponseMinTime > -1).Select(x => x.ResponseMaxTime).ToArray());
 
             return View(tw);
         }

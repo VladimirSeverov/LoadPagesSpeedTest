@@ -42,8 +42,8 @@ namespace LoadPagesSpeedTest.Controllers
 
                 await StartTestSite(twm);
                 twm.TestDetails = twm.TestDetails.OrderByDescending(x => x.ResponseMaxTime).ToList();
-                ViewBag.Labels = JsonConvert.SerializeObject(twm.TestDetails.Select(x => x.Url).ToArray());
-                ViewBag.DataPoints = JsonConvert.SerializeObject(twm.TestDetails.Select(x => x.ResponseMaxTime).ToArray());
+                ViewBag.Labels = JsonConvert.SerializeObject(twm.TestDetails.Where(z => z.ResponseMinTime > -1).Select(x => x.Url).ToArray());
+                ViewBag.DataPoints = JsonConvert.SerializeObject(twm.TestDetails.Where(z => z.ResponseMinTime > -1).Select(x => x.ResponseMaxTime).ToArray());
 
                 return View(twm);
             }
@@ -57,6 +57,7 @@ namespace LoadPagesSpeedTest.Controllers
         private async Task StartTestSite(TestViewModel twm)
         {
             List<string> siteMapUrls = siteHelper.GetSiteMap(twm.Test.MainUrl);
+            if (siteMapUrls.Count == 0) throw new Exception("Sitemap is empty"); 
             twm.Test.TestDate = DateTime.Now;
             twm.Test.TestId = await tests.Add(twm.Test);
 

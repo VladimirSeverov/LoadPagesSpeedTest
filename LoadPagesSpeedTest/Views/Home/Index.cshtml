@@ -38,10 +38,10 @@
             <tbody>
                 @foreach (var item in Model.TestDetails)
                 {
-                    <tr>
+                    <tr class="@(item.ResponseMinTime==-1?"red":"black")">
                         <td>@item.Url</td>
-                        <td>@item.ResponseMinTime</td>
-                        <td>@item.ResponseMaxTime</td>
+                        <td>@(item.ResponseMinTime != -1? item.ResponseMinTime.ToString():"-")</td>
+                        <td>@(item.ResponseMaxTime != -1 ? item.ResponseMaxTime.ToString():"-")</td>
                     </tr>
                 }
             </tbody>
@@ -58,7 +58,7 @@
             
             var infohub = $.connection.viewHub;
             infohub.client.addItemResult = function (tres) {
-                var tr = "<tr><td>" + tres.Url + "</td><td>" + tres.ResponseMinTime + "</td><td>" + tres.ResponseMaxTime + "</td></tr>";
+                var tr = "<tr class=\"" + (tres.ResponseMinTime == -1 ? "red" : "black") + "\"><td>" + tres.Url + "</td><td>" + (tres.ResponseMinTime != -1 ? tres.ResponseMinTime : "-") + "</td><td>" + (tres.ResponseMaxTime != -1 ? tres.ResponseMaxTime:"-") + "</td></tr>";
                 $('#res_tbl').find('tbody').append(tr);
             };
             infohub.client.registerId = function (id) {

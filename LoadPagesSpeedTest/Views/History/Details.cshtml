@@ -31,15 +31,15 @@
         <tbody>
             @foreach (var item in Model.TestDetails)
             {
-                <tr>
+                <tr class="@(item.ResponseMinTime==-1?"red":"black")">
                     <td>
                         @Html.DisplayFor(modelItem => item.Url)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ResponseMinTime)
+                        @(item.ResponseMinTime !=-1 ? item.ResponseMinTime.ToString():"-")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ResponseMaxTime)
+                        @(item.ResponseMaxTime != -1 ? item.ResponseMaxTime.ToString():"-")
                     </td>
                 </tr>
             }

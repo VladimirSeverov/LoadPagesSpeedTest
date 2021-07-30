@@ -43,13 +43,27 @@ namespace LoadPagesSpeedTest.Helpers
 
         private string DownloadString(string url)
         {
-            HttpClient httpClient = new HttpClient();
-            return httpClient.GetStringAsync(url).Result;
+            try
+            {
+                HttpClient httpClient = new HttpClient();
+                return httpClient.GetStringAsync(url).Result;
+            }
+            catch
+            {
+                return "";
+            }
         }
         private byte[] DownloadBytes(string url)
         {
-            HttpClient httpClient = new HttpClient();
-            return httpClient.GetByteArrayAsync(url).Result;
+            try
+            {
+                HttpClient httpClient = new HttpClient();
+                return httpClient.GetByteArrayAsync(url).Result;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private int GetDownloadSpeed(string url)
@@ -58,16 +72,17 @@ namespace LoadPagesSpeedTest.Helpers
             stopWatch.Start();
             var s = DownloadBytes(url);
             stopWatch.Stop();
-            return stopWatch.Elapsed.Milliseconds;
+            return s != null ? stopWatch.Elapsed.Milliseconds : -1;
         }
 
-        private async Task<List<int>> GetTestResult(string url)
+        private async Task<List<int>> GetTestResult(string url, int requestsCount=3)
         {
             List<int> res = new List<int>();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < requestsCount; i++)
             {
                 var ms = await Task.Run(() => GetDownloadSpeed(url));
                 res.Add(ms);
+                if (ms == -1) break;
             }
             return res;
         }
@@ -75,7 +90,6 @@ namespace LoadPagesSpeedTest.Helpers
         public async Task<TestDetails> GetResultBySitemapItem(string url, int id)
         {
             var res = await GetTestResult(url);
-
             return new TestDetails() { Url = url, ResponseMinTime = res.Min(), ResponseMaxTime = res.Max(), ResponseAvgTime = Convert.ToInt32(res.Average()), TestId = id };
         }
     }

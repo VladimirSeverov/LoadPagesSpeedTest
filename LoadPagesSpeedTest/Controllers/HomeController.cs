@@ -56,9 +56,6 @@ namespace LoadPagesSpeedTest.Controllers
 
         private async Task StartTestSite(TestViewModel twm)
         {
-
-            
-
             List<string> siteMapUrls = siteHelper.GetSiteMap(twm.Test.MainUrl);
             twm.Test.TestDate = DateTime.Now;
             twm.Test.TestId = await tests.Add(twm.Test);

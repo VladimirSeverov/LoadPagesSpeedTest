@@ -3,7 +3,7 @@
     ViewBag.Title = "TestDetails";
 }
 
-<h2>@("Test for: «" + Model.Test.MainUrl+ "» at " + Model.Test.TestDate.ToShortDateString()+" "+Model.Test.TestDate.ToShortTimeString())</h2>
+<h2>@("Test for: «" + Model.Test.MainUrl+ "» at " + Model.Test.TestDate.ToString("dd.MM.yyyy HH:mm:ss"))</h2>
 
 <div class="div_bordered">
     <div>

@@ -41,18 +41,18 @@ namespace LoadPagesSpeedTest.Helpers
             return res;
         }
 
-        public string DownloadString(string url)
+        private string DownloadString(string url)
         {
             HttpClient httpClient = new HttpClient();
             return httpClient.GetStringAsync(url).Result;
         }
-        public byte[] DownloadBytes(string url)
+        private byte[] DownloadBytes(string url)
         {
             HttpClient httpClient = new HttpClient();
             return httpClient.GetByteArrayAsync(url).Result;
         }
 
-        public int GetDownloadSpeed(string url)
+        private int GetDownloadSpeed(string url)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -61,7 +61,7 @@ namespace LoadPagesSpeedTest.Helpers
             return stopWatch.Elapsed.Milliseconds;
         }
 
-        public async Task<List<int>> GetTestResult(string url)
+        private async Task<List<int>> GetTestResult(string url)
         {
             List<int> res = new List<int>();
             for (int i = 0; i < 3; i++)

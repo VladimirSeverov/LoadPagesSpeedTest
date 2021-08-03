@@ -22,20 +22,24 @@ namespace LoadPagesSpeedTest.Helpers
 
             IHtmlDocument angle = new HtmlParser().ParseDocument(html);
             string href = "";
+            Uri newUri;
             foreach (IElement element in angle.QuerySelectorAll("a"))
             {
                 href = element.GetAttribute("href");
                 if (href == null) continue;
-                if (href.Length <= 1) continue;
-                if (!href.Contains("http"))
+
+                if(Uri.TryCreate(baseURI, href, out newUri))
                 {
-                    Uri newURI = new Uri(baseURI, href);
-                    href = newURI.ToString();
-                }
-                if (!res.Contains(href))
-                {
-                    res.Add(href);
-                }
+                    if (newUri.IsFile || !baseURI.IsBaseOf(newUri) || !newUri.Scheme.Contains("http"))
+                    {
+                        continue;
+                    }
+
+                    if (!res.Contains(newUri.ToString()))
+                    {
+                        res.Add(newUri.ToString());
+                    }
+                }               
             }
 
             return res;
